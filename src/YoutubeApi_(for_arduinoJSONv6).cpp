@@ -86,7 +86,7 @@ String YoutubeApi::sendGetToYoutube(String command) {
 				break;
 			}
 		}
-	}
+	} else { if(_debug) Serial.println(".... can't connect to server"); }
 	closeClient();
 	return body;
 }
@@ -100,7 +100,7 @@ bool YoutubeApi::getChannelStatistics(String channelId){
 	JsonObject root;
 	auto error = deserializeJson(jsonDoc, response);
 	if(! error) {
-		if (root.containsKey("items")) {
+		if (jsonDoc.containsKey("items")) {
 			long subscriberCount = jsonDoc["items"][0]["statistics"]["subscriberCount"];
 			long viewCount = jsonDoc["items"][0]["statistics"]["viewCount"];
 			long commentCount = jsonDoc["items"][0]["statistics"]["commentCount"];
@@ -115,7 +115,7 @@ bool YoutubeApi::getChannelStatistics(String channelId){
 
 			return true;
 		}
-	}
+	} else Serial.println(error.c_str());
 
 	return false;
 }
